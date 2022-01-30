@@ -9,10 +9,11 @@ const app = express();
 app.use(morgan('combined'));
 
 //routes
-const plant = require('./src/routes/Plant/plant.route');
-
-app.use('/api', plant);
+const home = require('./src/routes/HomeRoute');
+app.use('/test', home);
 
 //connect port
 const PORT = 5000;
-app.listen(PORT, () => console.log(`server started on port http://localhost:${PORT}`));
+app.listen(PORT, () =>
+    console.log(`server started on port http://localhost:${PORT}`)
+);
