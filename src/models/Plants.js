@@ -2,7 +2,6 @@ const mongooese = require('mongoose');
 const Schema = mongooese.Schema;
 
 const PlantSchema = new Schema({
-    _id: mongooese.Schema.Types.ObjectId,
     name: {
         type: String,
         required: true,
