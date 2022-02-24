@@ -1,20 +1,36 @@
-const express = require('express');
+const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const plantRoute = require("./routes/PlantRoute");
+const userRoute = require("./routes/UserRoute");
+
+//config parse middleware high-level
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//use Cross-Origin-Resource-Sharing
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET,POST,PATCH,DELETE"],
+  })
+);
 
 //connect DB
-const db = require('./config/db');
+const db = require("./config/db");
 db.connectDB();
 
 //HTTP logger
-const morgan = require('morgan');
-app.use(morgan('combined'));
+const morgan = require("morgan");
+app.use(morgan("combined"));
 
 //routes
-const home = require('./routes/HomeRoute');
-app.use('/api', home);
+app.use("/user", userRoute);
+app.use("/plant", plantRoute);
 
 //connect port
 const PORT = 5000;
 app.listen(PORT, () =>
-    console.log(`server started on port http://localhost:${PORT}`)
+  console.log(`server started on port http://localhost:${PORT}`)
 );
