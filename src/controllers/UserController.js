@@ -1,5 +1,6 @@
 const User = require("../models/Users");
 const CryptoJS = require("crypto-js");
+const expressAsyncHandler = require("express-async-handler");
 
 class UserController {
   /**
@@ -14,42 +15,54 @@ class UserController {
   /**
    * LOGIN BY EMAIL
    */
-  async login(req, res) {
+  login = expressAsyncHandler(async (req, res) => {
     const { email, password } = req.body;
     try {
       const user = await User.findOne({ email });
-      !user && res.status(401).json("Wrong email or password");
+      !user &&
+        res.status(401).send({ message: "Wrong email, please check again!!" }); //401 is not authorized
 
       const bytes = CryptoJS.AES.decrypt(user.password, "Scanleaf");
       const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
 
       originalPassword !== password &&
-        res.status(401).json("Wrong email or password");
+        res
+          .status(401)
+          .send({ message: "Wrong password, please check again!!" }); //401 is not authorized
 
-      res.status(200).json(user);
+      res.status(200).send({ user }); //200 is success
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error); //500 is server error
     }
-  }
+  });
 
   /**
    * REGISTER
    */
-  async register(req, res) {
+  register = async (req, res) => {
     const { fullname, email, password, isAdmin } = req.body;
+
     const newUser = new User({
       fullname,
       email,
       password: CryptoJS.AES.encrypt(password, "Scanleaf").toString(),
       isAdmin,
     });
+
     try {
+      const userExist = await User.findOne({ email });
+      if (userExist !== null) {
+        res.status(400).send({ message: "Email does exists." });
+      }
+
       const user = await newUser.save();
-      res.status(201).json(user);
+      res.status(201).send({ user }); //201 is created
+      return;
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error); //500 is server error
+      return;
     }
-  }
+  };
 }
 
 module.exports = new UserController();
