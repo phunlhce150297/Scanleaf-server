@@ -30,7 +30,7 @@ class UserController {
           .status(401)
           .send({ message: "Wrong password, please check again!!" }); //401 is not authorized
 
-      res.status(200).send({ user }); //200 is success
+      res.status(200).json(user); //200 is success
     } catch (error) {
       res.status(500).json(error); //500 is server error
     }
@@ -42,21 +42,21 @@ class UserController {
   register = async (req, res) => {
     const { fullname, email, password, isAdmin } = req.body;
 
-    const newUser = new User({
-      fullname,
-      email,
-      password: CryptoJS.AES.encrypt(password, "Scanleaf").toString(),
-      isAdmin,
-    });
-
     try {
       const userExist = await User.findOne({ email });
       if (userExist !== null) {
         res.status(400).send({ message: "Email does exists." });
       }
 
+      const newUser = new User({
+        fullname,
+        email,
+        password: CryptoJS.AES.encrypt(password, "Scanleaf").toString(),
+        isAdmin,
+      });
+
       const user = await newUser.save();
-      res.status(201).send({ user }); //201 is created
+      res.status(201).json(user); //201 is created
       return;
     } catch (error) {
       res.status(500).json(error); //500 is server error
