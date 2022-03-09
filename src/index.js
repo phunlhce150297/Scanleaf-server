@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "*",
-    methods: ["GET,POST,PATCH,DELETE"],
+    methods: ["GET,POST,PUT,DELETE"],
   })
 );
 

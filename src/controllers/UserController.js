@@ -6,11 +6,11 @@ class UserController {
   /**
    * GET ALL USER
    */
-  getAllUser(req, res, next) {
+  getAllUser = (req, res, next) => {
     User.find({})
       .then((data) => res.json(data))
       .catch(next);
-  }
+  };
 
   /**
    * LOGIN BY EMAIL
@@ -39,7 +39,7 @@ class UserController {
   /**
    * REGISTER
    */
-  register = async (req, res) => {
+  register = expressAsyncHandler(async (req, res) => {
     const { fullname, email, password, isAdmin } = req.body;
 
     try {
@@ -62,7 +62,7 @@ class UserController {
       res.status(500).json(error); //500 is server error
       return;
     }
-  };
+  });
 }
 
 module.exports = new UserController();
