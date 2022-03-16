@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
 
-async function connectDB() {
+const uri =
+  "mongodb+srv://hungphu0402:PhuNLHCE150297.@test.rhjwe.mongodb.net/Scanleaf";
+
+const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost/Scanleaf");
+    await mongoose.connect(uri);
     console.log("Connect DB successful");
   } catch (error) {
     console.log("Connect DB failure");
     console.log(error);
   }
-}
+};
 
 module.exports = { connectDB };
